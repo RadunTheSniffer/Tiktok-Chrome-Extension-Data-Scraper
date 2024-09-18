@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,                         
+    "name": "Twitter Scraper Extension",
+    "version": "1.0",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/menu-burger(16).png"
+        }
+    }
+}
