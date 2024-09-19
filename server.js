@@ -18,7 +18,7 @@ app.post('/scrape-tiktok', async (req, res) => {
     const { query, count } = req.body;
 
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
         const formattedQuery = query.replace(" ", "%20");
         const url = `https://www.tiktok.com/search?q=${formattedQuery}&type=video`;
