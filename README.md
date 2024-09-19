@@ -26,8 +26,7 @@ The TikTok Scraper Extension is a Chrome extension designed to scrape TikTok dat
 - `popup.html`: HTML file for the extension's popup interface.
 - `popup.js`: JavaScript file for handling form submission and sending requests.
 - `output.html`: HTML file for displaying the scraped data.
-- `output.js`: JavaScript file for rendering the scraped data in the new tab.
-- `background.js`: Service worker script for handling background tasks (if needed).
+- `output.js`: Service worker script for for rendering the scraped data in the new tab.
 
 ## License
 This project is licensed under the MIT License.
