@@ -1,7 +1,7 @@
 # TikTok Scraper Extension
 
 ## Overview
-The TikTok Scraper Extension is a Chrome extension designed to scrape TikTok data based on user input. It allows users to enter a TikTok username and the number of posts they want to scrape, and then displays the scraped data in a new tab.
+The TikTok Scraper Extension is a Chrome extension designed to scrape TikTok data based on user input. It allows users to enter a TikTok query or topic and the number of posts they want to scrape, and then displays the scraped data in a new tab.
 
 ## Features
 - Scrape TikTok data by username.
