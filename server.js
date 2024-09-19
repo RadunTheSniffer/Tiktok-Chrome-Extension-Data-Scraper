@@ -18,12 +18,7 @@ app.post('/scrape-tiktok', async (req, res) => {
     const { query, count } = req.body;
 
     try {
-        // Launch Puppeteer and Chromium that comes bundled with it
-        const browser = await puppeteer.launch({
-            headless: false, // Set to false so you can see it working
-            args: ['--no-sandbox', '--disable-setuid-sandbox'], // Add sandbox arguments for Linux
-        });
-
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         const formattedQuery = query.replace(" ", "%20");
         const url = `https://www.tiktok.com/search?q=${formattedQuery}&type=video`;
@@ -36,22 +31,19 @@ app.post('/scrape-tiktok', async (req, res) => {
             return res.status(500).send(`Navigation error: ${error.message}`);
         }
 
-        // Here, you would add code to scroll and extract data such as usernames, captions, and dates.
-        const postDetails = await page.evaluate(() => {
-            // Example data scraping for video posts, modify according to the page structure
-            const posts = Array.from(document.querySelectorAll('.tiktok-post-class'));  // Change the selector based on actual HTML
-            return posts.map(post => {
-                const username = post.querySelector('.username-class').innerText;  // Replace with actual class name
-                const caption = post.querySelector('.caption-class').innerText;   // Replace with actual class name
-                const date = post.querySelector('.date-class').innerText;         // Replace with actual class name
-                return { username, caption, date };
-            });
-        });
+        // Scrape the raw HTML content
+        const htmlContent = await page.content();
 
         await browser.close();
 
-        // Send the scraped data back as JSON
-        res.json({ query, count, postDetails });
+        // Render the raw HTML content on the localhost page
+        res.send(`
+            <h1>Scraped TikTok HTML Content</h1>
+            <p>Query: ${query}</p>
+            <p>Count: ${count}</p>
+            <pre>${htmlContent}</pre>
+            <a href="/">Go Back</a>
+        `);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send(`Error: ${error.message}`);
@@ -61,3 +53,4 @@ app.post('/scrape-tiktok', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
