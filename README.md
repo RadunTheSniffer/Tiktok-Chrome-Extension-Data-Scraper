@@ -31,6 +31,7 @@ Most scrapers package are outdated and deprecated. On the other hand, tools like
 - `popup.js`: JavaScript file for handling form submission and sending requests.
 - `output.html`: HTML file for displaying the scraped data.
 - `output.js`: Service worker script for for rendering the scraped data in the new tab.
+- `server.js`: Handling extension request and scraping process
 
 ## License
 This project is licensed under the MIT License.
