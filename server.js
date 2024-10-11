@@ -1,19 +1,24 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const puppeteer = require('puppeteer');
-const cors = require('cors');
+// Importing necessary modules
+const express = require('express'); // Express.js framework
+const bodyParser = require('body-parser'); // Middleware for parsing request bodies
+const puppeteer = require('puppeteer'); // Library for controlling headless Chrome/Chromium
+const cors = require('cors'); // Middleware for enabling CORS
 
+// Creating an Express application
 const app = express();
 const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware setup
+app.use(cors()); // Enable CORS
+app.use(bodyParser.json()); // Parse JSON bodies
+app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
+// Define a route for the root URL
 app.get('/', (req, res) => {
     res.send('Output Page');
 });
 
+// Define a route for scraping TikTok (first version)
 app.post('/scrape-tiktok1', async (req, res) => {
     const { query, count } = req.body;
 
@@ -63,6 +68,7 @@ app.post('/scrape-tiktok1', async (req, res) => {
     }
 });
 
+// Define a route for scraping TikTok (second version)
 app.post('/scrape-tiktok2', async (req, res) => {
     const { query, count } = req.body;
 
@@ -99,6 +105,7 @@ app.post('/scrape-tiktok2', async (req, res) => {
     }
 });
 
+// Define a route for scraping TikTok (third version)
 app.post('/scrape-tiktok3', async (req, res) => {
     const { query, count } = req.body;
 
@@ -130,7 +137,7 @@ app.post('/scrape-tiktok3', async (req, res) => {
     }
 });
 
-
+// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
