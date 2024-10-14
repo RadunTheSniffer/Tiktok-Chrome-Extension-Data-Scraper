@@ -7,7 +7,7 @@ document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
     console.log('Form submitted:', { query, count });
 
     try {
-        const response = await fetch('http://localhost:3000/scrape-tiktok2s', {
+        const response = await fetch('http://localhost:3000/scrape-tiktok2', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

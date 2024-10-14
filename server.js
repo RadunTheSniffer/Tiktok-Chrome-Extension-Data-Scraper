@@ -1,24 +1,19 @@
-// Importing necessary modules
-const express = require('express'); // Express.js framework
-const bodyParser = require('body-parser'); // Middleware for parsing request bodies
-const puppeteer = require('puppeteer'); // Library for controlling headless Chrome/Chromium
-const cors = require('cors'); // Middleware for enabling CORS
+const express = require('express');
+const bodyParser = require('body-parser');
+const puppeteer = require('puppeteer');
+const cors = require('cors');
 
-// Creating an Express application
 const app = express();
 const port = 3000;
 
-// Middleware setup
-app.use(cors()); // Enable CORS
-app.use(bodyParser.json()); // Parse JSON bodies
-app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Define a route for the root URL
 app.get('/', (req, res) => {
     res.send('Output Page');
 });
 
-// Define a route for scraping TikTok (first version)
 app.post('/scrape-tiktok1', async (req, res) => {
     const { query, count } = req.body;
 
@@ -48,7 +43,8 @@ app.post('/scrape-tiktok1', async (req, res) => {
                 const link = post.querySelector('a[data-e2e="search-common-link"]')?.href || 'No link';
                 const caption = post.querySelector('span[data-e2e="video-caption"]')?.innerText || 'No caption';
                 const date = post.querySelector('span[data-e2e="video-published"]')?.innerText || 'Unknown date';
-                return { username, link, caption, date };
+                const spanText = post.querySelector('span.css-j2a19r-SpanText')?.innerText || 'No text';
+                return { username, link, caption, date, spanText };
             });
         });
 
@@ -57,18 +53,28 @@ app.post('/scrape-tiktok1', async (req, res) => {
         // Limit the number of results to the count provided
         const limitedPostDetails = postDetails.slice(0, count);
 
-        res.json({
-            query,
-            count,
-            posts: limitedPostDetails
-        });
+        // Create HTML form
+        const formHtml = limitedPostDetails.map(post => `
+            <form>
+                <label>Username: ${post.username}</label><br>
+                <label>Link: <a href="${post.link}">${post.link}</a></label><br>
+                <label>Caption: ${post.caption}</label><br>
+                <label>Date: ${post.date}</label><br>
+                <label>Text: ${post.spanText}</label><br>
+            </form>
+        `).join('');
+
+        res.send(`
+            <h1>Scraped TikTok Data</h1>
+            ${formHtml}
+            <a href="/">Go Back</a>
+        `);
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send(`Error: ${error.message}`);
     }
 });
 
-// Define a route for scraping TikTok (second version)
 app.post('/scrape-tiktok2', async (req, res) => {
     const { query, count } = req.body;
 
@@ -91,12 +97,26 @@ app.post('/scrape-tiktok2', async (req, res) => {
 
         await browser.close();
 
-        // Render the raw HTML content on the localhost page
+        // Extract text after the specified span tag
+        const spanTexts = [];
+        const regex = /<span class="css-j2a19r-SpanText"[^>]*>([^<]*)<\/span>/g;
+        let match;
+        while ((match = regex.exec(htmlContent)) !== null) {
+            spanTexts.push(match);
+        }
+
+        // Render the extracted text in an HTML form
+        const formHtml = spanTexts.map(text => `
+            <form>
+                <label>Text: ${text}</label><br>
+            </form>
+        `).join('');
+
         res.send(`
             <h1>Scraped TikTok HTML Content</h1>
             <p>Query: ${query}</p>
             <p>Count: ${count}</p>
-            <pre>${htmlContent}</pre>
+            ${formHtml}
             <a href="/">Go Back</a>
         `);
     } catch (error) {
@@ -105,7 +125,6 @@ app.post('/scrape-tiktok2', async (req, res) => {
     }
 });
 
-// Define a route for scraping TikTok (third version)
 app.post('/scrape-tiktok3', async (req, res) => {
     const { query, count } = req.body;
 
@@ -137,8 +156,6 @@ app.post('/scrape-tiktok3', async (req, res) => {
     }
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-
