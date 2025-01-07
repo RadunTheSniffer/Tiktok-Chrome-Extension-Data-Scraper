@@ -19,7 +19,7 @@ app.post('/scrape-tiktok1', async (req, res) => {
 
     try {
         const browser = await puppeteer.launch({
-            headless: false, // Keep headless off for debugging
+            headless: true, // Keep headless off for debugging
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
